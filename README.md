@@ -23,5 +23,5 @@
 ```javascript
 npm install
 npm test
-npm run deploy:kovan
-npm run balance:kovan
+npm run deploy:kovan // runs ./scripts/deploy.ts
+npm run balance:kovan //runs ./scripts/balance.ts
