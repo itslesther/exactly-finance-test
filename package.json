@@ -7,7 +7,8 @@
     "test": "npx hardhat test",
     "deploy:kovan": "npx hardhat run ./scripts/deploy.ts --network kovan",
     "deploy:bscTestnet": "npx hardhat run ./scripts/deploy.ts --network bscTestnet",
-    "balance:kovan": "npx hardhat run ./scripts/balance.ts --network kovan"
+    "balance:kovan": "npx hardhat run ./scripts/balance.ts --network kovan",
+    "balance:bscTestnet": "npx hardhat run ./scripts/balance.ts --network bscTestnet"
   },
   "author": "Lesther Caballero",
   "license": "ISC",

@@ -4,7 +4,8 @@ import { ethers } from "hardhat";
 import { toEther } from "../utils";
 
 async function main() {
-  const address = "0xa1C164264ca32f77fA7D7a6009730c3E50d6434A";
+  const address = "0xa1C164264ca32f77fA7D7a6009730c3E50d6434A"; // KOVAN
+  // const address = "0x86039493CFE98401fD1933814637b9D06FFCAe9a"; // BSC TESTNET
   const balance = await ethers.provider.getBalance(address);
 
   console.log(
