@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx hardhat test",
+    "deploy:kovan": "npx hardhat run ./scripts/deploy.ts --network kovan",
+    "deploy:bscTestnet": "npx hardhat run ./scripts/deploy.ts --network bscTestnet",
+    "balance:kovan": "npx hardhat run ./scripts/balance.ts --network kovan"
   },
   "author": "Lesther Caballero",
   "license": "ISC",

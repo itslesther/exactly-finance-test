@@ -20,7 +20,6 @@ import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 export interface TokenInterface extends utils.Interface {
   contractName: "Token";
   functions: {
-    "MAX_SUPPLY()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -42,10 +41,6 @@ export interface TokenInterface extends utils.Interface {
     "unpause()": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "MAX_SUPPLY",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
@@ -96,7 +91,6 @@ export interface TokenInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "MAX_SUPPLY", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -208,8 +202,6 @@ export interface Token extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    MAX_SUPPLY(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     allowance(
       owner: string,
       spender: string,
@@ -289,8 +281,6 @@ export interface Token extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  MAX_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
 
   allowance(
     owner: string,
@@ -372,8 +362,6 @@ export interface Token extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    MAX_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
-
     allowance(
       owner: string,
       spender: string,
@@ -485,8 +473,6 @@ export interface Token extends BaseContract {
   };
 
   estimateGas: {
-    MAX_SUPPLY(overrides?: CallOverrides): Promise<BigNumber>;
-
     allowance(
       owner: string,
       spender: string,
@@ -568,8 +554,6 @@ export interface Token extends BaseContract {
   };
 
   populateTransaction: {
-    MAX_SUPPLY(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     allowance(
       owner: string,
       spender: string,

@@ -21,6 +21,10 @@ export function toWei(value: string | number) {
   return web3.utils.toWei(value);
 }
 
+export function toEther(value: string | number) {
+  return web3.utils.fromWei(value);
+}
+
 export function addMonths(time: number, months: number) {
   return toSec(moment(time * 1000).add(months - 1, "months"));
 }

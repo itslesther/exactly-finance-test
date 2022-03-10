@@ -6,12 +6,12 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Token is ERC20Pausable, Ownable {
 
-    uint256 constant public MAX_SUPPLY = 160_000_000e18;
+    // uint256 constant public MAX_SUPPLY = 160_000_000e18;
 
-    constructor(string memory _name, string memory _symbol)
+    constructor(string memory _name, string memory _symbol, uint256 _totalSupply)
         ERC20(_name, _symbol)
     {
-        _mint(_msgSender(), MAX_SUPPLY);
+        _mint(_msgSender(), _totalSupply);
     }
 
     function mint(address _receiver, uint256 _amount) external onlyOwner {
