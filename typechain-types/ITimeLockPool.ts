@@ -4,11 +4,10 @@
 import {
   BaseContract,
   BigNumber,
-  BigNumberish,
   BytesLike,
   CallOverrides,
   ContractTransaction,
-  Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -20,13 +19,10 @@ import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 export interface ITimeLockPoolInterface extends utils.Interface {
   contractName: "ITimeLockPool";
   functions: {
-    "deposit(uint256,uint256,address)": FunctionFragment;
+    "deposit()": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "deposit",
-    values: [BigNumberish, BigNumberish, string]
-  ): string;
+  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
 
@@ -62,46 +58,29 @@ export interface ITimeLockPool extends BaseContract {
 
   functions: {
     deposit(
-      _amount: BigNumberish,
-      _duration: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
   deposit(
-    _amount: BigNumberish,
-    _duration: BigNumberish,
-    _receiver: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    deposit(
-      _amount: BigNumberish,
-      _duration: BigNumberish,
-      _receiver: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    deposit(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
     deposit(
-      _amount: BigNumberish,
-      _duration: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     deposit(
-      _amount: BigNumberish,
-      _duration: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

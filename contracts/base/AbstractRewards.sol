@@ -4,18 +4,6 @@ pragma solidity 0.8.7;
 import "../interfaces/IAbstractRewards.sol";
 import "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
-/**
- * @dev Based on: https://github.com/indexed-finance/dividends/blob/master/contracts/base/AbstractDividends.sol
- * Renamed dividends to rewards.
- * @dev (OLD) Many functions in this contract were taken from this repository:
- * https://github.com/atpar/funds-distribution-token/blob/master/contracts/FundsDistributionToken.sol
- * which is an example implementation of ERC 2222, the draft for which can be found at
- * https://github.com/atpar/funds-distribution-token/blob/master/EIP-DRAFT.md
- *
- * This contract has been substantially modified from the original and does not comply with ERC 2222.
- * Many functions were renamed as "rewards" rather than "funds" and the core functionality was separated
- * into this abstract contract which can be inherited by anything tracking ownership of reward shares.
- */
 abstract contract AbstractRewards is IAbstractRewards {
   using SafeCast for uint128;
   using SafeCast for uint256;

@@ -9,6 +9,7 @@ import {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -29,61 +30,37 @@ export declare namespace ERC20Votes {
   };
 }
 
-export declare namespace TimeLockPool {
-  export type DepositStruct = {
-    amount: BigNumberish;
-    start: BigNumberish;
-    end: BigNumberish;
-  };
-
-  export type DepositStructOutput = [BigNumber, BigNumber, BigNumber] & {
-    amount: BigNumber;
-    start: BigNumber;
-    end: BigNumber;
-  };
-}
-
 export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
   contractName: "TimeLockNonTransferablePool";
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "DOMAIN_SEPARATOR()": FunctionFragment;
-    "MIN_LOCK_DURATION()": FunctionFragment;
     "POINTS_MULTIPLIER()": FunctionFragment;
     "TOKEN_SAVER_ROLE()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "checkpoints(address,uint32)": FunctionFragment;
-    "claimRewards(address)": FunctionFragment;
+    "claimRewards()": FunctionFragment;
     "cumulativeRewardsOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "delegate(address)": FunctionFragment;
     "delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "delegates(address)": FunctionFragment;
-    "deposit(uint256,uint256,address)": FunctionFragment;
-    "depositToken()": FunctionFragment;
-    "depositsOf(address,uint256)": FunctionFragment;
+    "deposit()": FunctionFragment;
+    "depositOf(address)": FunctionFragment;
     "distributeRewards(uint256)": FunctionFragment;
-    "escrowDuration()": FunctionFragment;
-    "escrowPool()": FunctionFragment;
-    "escrowPortion()": FunctionFragment;
-    "getDepositsOf(address)": FunctionFragment;
-    "getDepositsOfLength(address)": FunctionFragment;
-    "getMultiplier(uint256)": FunctionFragment;
+    "getDepositOf(address)": FunctionFragment;
     "getPastTotalSupply(uint256)": FunctionFragment;
     "getPastVotes(address,uint256)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "getRoleMember(bytes32,uint256)": FunctionFragment;
     "getRoleMemberCount(bytes32)": FunctionFragment;
-    "getTotalDeposit(address)": FunctionFragment;
     "getVotes(address)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "maxBonus()": FunctionFragment;
-    "maxLockDuration()": FunctionFragment;
     "name()": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "numCheckpoints(address)": FunctionFragment;
@@ -99,7 +76,7 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
-    "withdraw(uint256,address)": FunctionFragment;
+    "withdraw()": FunctionFragment;
     "withdrawableRewardsOf(address)": FunctionFragment;
     "withdrawnRewards(address)": FunctionFragment;
     "withdrawnRewardsOf(address)": FunctionFragment;
@@ -111,10 +88,6 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "DOMAIN_SEPARATOR",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MIN_LOCK_DURATION",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -140,7 +113,7 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "claimRewards",
-    values: [string]
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "cumulativeRewardsOf",
@@ -164,45 +137,15 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(functionFragment: "delegates", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "deposit",
-    values: [BigNumberish, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositToken",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "depositsOf",
-    values: [string, BigNumberish]
-  ): string;
+  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
+  encodeFunctionData(functionFragment: "depositOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "distributeRewards",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "escrowDuration",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "escrowPool",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "escrowPortion",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getDepositsOf",
+    functionFragment: "getDepositOf",
     values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getDepositsOfLength",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getMultiplier",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getPastTotalSupply",
@@ -224,10 +167,6 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
     functionFragment: "getRoleMemberCount",
     values: [BytesLike]
   ): string;
-  encodeFunctionData(
-    functionFragment: "getTotalDeposit",
-    values: [string]
-  ): string;
   encodeFunctionData(functionFragment: "getVotes", values: [string]): string;
   encodeFunctionData(
     functionFragment: "grantRole",
@@ -240,11 +179,6 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "maxBonus", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "maxLockDuration",
-    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "nonces", values: [string]): string;
@@ -305,10 +239,7 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "withdraw",
-    values: [BigNumberish, string]
-  ): string;
+  encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "withdrawableRewardsOf",
     values: [string]
@@ -328,10 +259,6 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "DOMAIN_SEPARATOR",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MIN_LOCK_DURATION",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -369,34 +296,13 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "delegates", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "depositToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "depositsOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "depositOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "distributeRewards",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "escrowDuration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "escrowPool", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "escrowPortion",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getDepositsOf",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getDepositsOfLength",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getMultiplier",
+    functionFragment: "getDepositOf",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -419,20 +325,11 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
     functionFragment: "getRoleMemberCount",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "getTotalDeposit",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "getVotes", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "maxBonus", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "maxLockDuration",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
@@ -492,8 +389,8 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
     "Approval(address,address,uint256)": EventFragment;
     "DelegateChanged(address,address,address)": EventFragment;
     "DelegateVotesChanged(address,uint256,uint256)": EventFragment;
-    "Deposited(uint256,uint256,address,address)": EventFragment;
-    "RewardsClaimed(address,address,uint256,uint256)": EventFragment;
+    "Deposited(uint256,address)": EventFragment;
+    "RewardsClaimed(address,uint256)": EventFragment;
     "RewardsDistributed(address,uint256)": EventFragment;
     "RewardsWithdrawn(address,uint256)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
@@ -501,7 +398,7 @@ export interface TimeLockNonTransferablePoolInterface extends utils.Interface {
     "RoleRevoked(bytes32,address,address)": EventFragment;
     "TokenSaved(address,address,address,uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
-    "Withdrawn(uint256,address,address,uint256)": EventFragment;
+    "Withdrawn(address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
@@ -542,20 +439,15 @@ export type DelegateVotesChangedEventFilter =
   TypedEventFilter<DelegateVotesChangedEvent>;
 
 export type DepositedEvent = TypedEvent<
-  [BigNumber, BigNumber, string, string],
-  { amount: BigNumber; duration: BigNumber; receiver: string; from: string }
+  [BigNumber, string],
+  { amount: BigNumber; receiver: string }
 >;
 
 export type DepositedEventFilter = TypedEventFilter<DepositedEvent>;
 
 export type RewardsClaimedEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber],
-  {
-    _from: string;
-    _receiver: string;
-    _escrowedAmount: BigNumber;
-    _nonEscrowedAmount: BigNumber;
-  }
+  [string, BigNumber],
+  { _receiver: string; _rewardAmount: BigNumber }
 >;
 
 export type RewardsClaimedEventFilter = TypedEventFilter<RewardsClaimedEvent>;
@@ -613,8 +505,8 @@ export type TransferEvent = TypedEvent<
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
 export type WithdrawnEvent = TypedEvent<
-  [BigNumber, string, string, BigNumber],
-  { depositId: BigNumber; receiver: string; from: string; amount: BigNumber }
+  [string, BigNumber],
+  { receiver: string; amount: BigNumber }
 >;
 
 export type WithdrawnEventFilter = TypedEventFilter<WithdrawnEvent>;
@@ -651,8 +543,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
 
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
 
-    MIN_LOCK_DURATION(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     POINTS_MULTIPLIER(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     TOKEN_SAVER_ROLE(overrides?: CallOverrides): Promise<[string]>;
@@ -678,7 +568,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     ): Promise<[ERC20Votes.CheckpointStructOutput]>;
 
     claimRewards(
-      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -713,49 +602,18 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     delegates(account: string, overrides?: CallOverrides): Promise<[string]>;
 
     deposit(
-      _amount: BigNumberish,
-      _duration: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    depositToken(overrides?: CallOverrides): Promise<[string]>;
-
-    depositsOf(
-      arg0: string,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        amount: BigNumber;
-        start: BigNumber;
-        end: BigNumber;
-      }
-    >;
+    depositOf(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     distributeRewards(
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    escrowDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    escrowPool(overrides?: CallOverrides): Promise<[string]>;
-
-    escrowPortion(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    getDepositsOf(
+    getDepositOf(
       _account: string,
-      overrides?: CallOverrides
-    ): Promise<[TimeLockPool.DepositStructOutput[]]>;
-
-    getDepositsOfLength(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getMultiplier(
-      _lockDuration: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -783,11 +641,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    getTotalDeposit(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     getVotes(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     grantRole(
@@ -807,10 +660,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       addedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    maxBonus(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    maxLockDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
@@ -883,8 +732,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     ): Promise<ContractTransaction>;
 
     withdraw(
-      _depositId: BigNumberish,
-      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -907,8 +754,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
-
-  MIN_LOCK_DURATION(overrides?: CallOverrides): Promise<BigNumber>;
 
   POINTS_MULTIPLIER(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -935,7 +780,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
   ): Promise<ERC20Votes.CheckpointStructOutput>;
 
   claimRewards(
-    _receiver: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -970,51 +814,17 @@ export interface TimeLockNonTransferablePool extends BaseContract {
   delegates(account: string, overrides?: CallOverrides): Promise<string>;
 
   deposit(
-    _amount: BigNumberish,
-    _duration: BigNumberish,
-    _receiver: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  depositToken(overrides?: CallOverrides): Promise<string>;
-
-  depositsOf(
-    arg0: string,
-    arg1: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      amount: BigNumber;
-      start: BigNumber;
-      end: BigNumber;
-    }
-  >;
+  depositOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   distributeRewards(
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  escrowDuration(overrides?: CallOverrides): Promise<BigNumber>;
-
-  escrowPool(overrides?: CallOverrides): Promise<string>;
-
-  escrowPortion(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getDepositsOf(
-    _account: string,
-    overrides?: CallOverrides
-  ): Promise<TimeLockPool.DepositStructOutput[]>;
-
-  getDepositsOfLength(
-    _account: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getMultiplier(
-    _lockDuration: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getDepositOf(_account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   getPastTotalSupply(
     blockNumber: BigNumberish,
@@ -1040,11 +850,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getTotalDeposit(
-    _account: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   getVotes(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   grantRole(
@@ -1064,10 +869,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     addedValue: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  maxBonus(overrides?: CallOverrides): Promise<BigNumber>;
-
-  maxLockDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
@@ -1134,8 +935,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
   ): Promise<ContractTransaction>;
 
   withdraw(
-    _depositId: BigNumberish,
-    _receiver: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1155,8 +954,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
-
-    MIN_LOCK_DURATION(overrides?: CallOverrides): Promise<BigNumber>;
 
     POINTS_MULTIPLIER(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1182,7 +979,7 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<ERC20Votes.CheckpointStructOutput>;
 
-    claimRewards(_receiver: string, overrides?: CallOverrides): Promise<void>;
+    claimRewards(overrides?: CallOverrides): Promise<void>;
 
     cumulativeRewardsOf(
       _account: string,
@@ -1211,50 +1008,17 @@ export interface TimeLockNonTransferablePool extends BaseContract {
 
     delegates(account: string, overrides?: CallOverrides): Promise<string>;
 
-    deposit(
-      _amount: BigNumberish,
-      _duration: BigNumberish,
-      _receiver: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    deposit(overrides?: CallOverrides): Promise<void>;
 
-    depositToken(overrides?: CallOverrides): Promise<string>;
-
-    depositsOf(
-      arg0: string,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        amount: BigNumber;
-        start: BigNumber;
-        end: BigNumber;
-      }
-    >;
+    depositOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     distributeRewards(
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    escrowDuration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    escrowPool(overrides?: CallOverrides): Promise<string>;
-
-    escrowPortion(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getDepositsOf(
+    getDepositOf(
       _account: string,
-      overrides?: CallOverrides
-    ): Promise<TimeLockPool.DepositStructOutput[]>;
-
-    getDepositsOfLength(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getMultiplier(
-      _lockDuration: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1282,11 +1046,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getTotalDeposit(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     getVotes(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     grantRole(
@@ -1306,10 +1065,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       addedValue: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
-
-    maxBonus(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxLockDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -1378,11 +1133,7 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    withdraw(
-      _depositId: BigNumberish,
-      _receiver: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    withdraw(overrides?: CallOverrides): Promise<void>;
 
     withdrawableRewardsOf(
       _account: string,
@@ -1434,30 +1185,19 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       newBalance?: null
     ): DelegateVotesChangedEventFilter;
 
-    "Deposited(uint256,uint256,address,address)"(
+    "Deposited(uint256,address)"(
       amount?: null,
-      duration?: null,
-      receiver?: string | null,
-      from?: string | null
+      receiver?: string | null
     ): DepositedEventFilter;
-    Deposited(
-      amount?: null,
-      duration?: null,
-      receiver?: string | null,
-      from?: string | null
-    ): DepositedEventFilter;
+    Deposited(amount?: null, receiver?: string | null): DepositedEventFilter;
 
-    "RewardsClaimed(address,address,uint256,uint256)"(
-      _from?: string | null,
+    "RewardsClaimed(address,uint256)"(
       _receiver?: string | null,
-      _escrowedAmount?: null,
-      _nonEscrowedAmount?: null
+      _rewardAmount?: null
     ): RewardsClaimedEventFilter;
     RewardsClaimed(
-      _from?: string | null,
       _receiver?: string | null,
-      _escrowedAmount?: null,
-      _nonEscrowedAmount?: null
+      _rewardAmount?: null
     ): RewardsClaimedEventFilter;
 
     "RewardsDistributed(address,uint256)"(
@@ -1535,26 +1275,17 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       value?: null
     ): TransferEventFilter;
 
-    "Withdrawn(uint256,address,address,uint256)"(
-      depositId?: BigNumberish | null,
+    "Withdrawn(address,uint256)"(
       receiver?: string | null,
-      from?: string | null,
       amount?: null
     ): WithdrawnEventFilter;
-    Withdrawn(
-      depositId?: BigNumberish | null,
-      receiver?: string | null,
-      from?: string | null,
-      amount?: null
-    ): WithdrawnEventFilter;
+    Withdrawn(receiver?: string | null, amount?: null): WithdrawnEventFilter;
   };
 
   estimateGas: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MIN_LOCK_DURATION(overrides?: CallOverrides): Promise<BigNumber>;
 
     POINTS_MULTIPLIER(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1581,7 +1312,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     ): Promise<BigNumber>;
 
     claimRewards(
-      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1616,43 +1346,18 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     delegates(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     deposit(
-      _amount: BigNumberish,
-      _duration: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    depositToken(overrides?: CallOverrides): Promise<BigNumber>;
-
-    depositsOf(
-      arg0: string,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    depositOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     distributeRewards(
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    escrowDuration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    escrowPool(overrides?: CallOverrides): Promise<BigNumber>;
-
-    escrowPortion(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getDepositsOf(
+    getDepositOf(
       _account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getDepositsOfLength(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getMultiplier(
-      _lockDuration: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1683,11 +1388,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getTotalDeposit(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     getVotes(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     grantRole(
@@ -1707,10 +1407,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       addedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    maxBonus(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxLockDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1783,8 +1479,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     ): Promise<BigNumber>;
 
     withdraw(
-      _depositId: BigNumberish,
-      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1810,8 +1504,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    MIN_LOCK_DURATION(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     POINTS_MULTIPLIER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1841,7 +1533,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     claimRewards(
-      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1879,17 +1570,11 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     deposit(
-      _amount: BigNumberish,
-      _duration: BigNumberish,
-      _receiver: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    depositToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    depositsOf(
+    depositOf(
       arg0: string,
-      arg1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1898,24 +1583,8 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    escrowDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    escrowPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    escrowPortion(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getDepositsOf(
+    getDepositOf(
       _account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getDepositsOfLength(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getMultiplier(
-      _lockDuration: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1946,11 +1615,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getTotalDeposit(
-      _account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getVotes(
       account: string,
       overrides?: CallOverrides
@@ -1973,10 +1637,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
       addedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    maxBonus(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    maxLockDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -2052,8 +1712,6 @@ export interface TimeLockNonTransferablePool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     withdraw(
-      _depositId: BigNumberish,
-      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

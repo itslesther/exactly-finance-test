@@ -40,18 +40,14 @@ export interface BasePoolInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "checkpoints(address,uint32)": FunctionFragment;
-    "claimRewards(address)": FunctionFragment;
+    "claimRewards()": FunctionFragment;
     "cumulativeRewardsOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "delegate(address)": FunctionFragment;
     "delegateBySig(address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
     "delegates(address)": FunctionFragment;
-    "depositToken()": FunctionFragment;
     "distributeRewards(uint256)": FunctionFragment;
-    "escrowDuration()": FunctionFragment;
-    "escrowPool()": FunctionFragment;
-    "escrowPortion()": FunctionFragment;
     "getPastTotalSupply(uint256)": FunctionFragment;
     "getPastVotes(address,uint256)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
@@ -112,7 +108,7 @@ export interface BasePoolInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "claimRewards",
-    values: [string]
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "cumulativeRewardsOf",
@@ -137,24 +133,8 @@ export interface BasePoolInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "delegates", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "depositToken",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "distributeRewards",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "escrowDuration",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "escrowPool",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "escrowPortion",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getPastTotalSupply",
@@ -304,20 +284,7 @@ export interface BasePoolInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "delegates", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "depositToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "distributeRewards",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "escrowDuration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "escrowPool", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "escrowPortion",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -403,7 +370,7 @@ export interface BasePoolInterface extends utils.Interface {
     "Approval(address,address,uint256)": EventFragment;
     "DelegateChanged(address,address,address)": EventFragment;
     "DelegateVotesChanged(address,uint256,uint256)": EventFragment;
-    "RewardsClaimed(address,address,uint256,uint256)": EventFragment;
+    "RewardsClaimed(address,uint256)": EventFragment;
     "RewardsDistributed(address,uint256)": EventFragment;
     "RewardsWithdrawn(address,uint256)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
@@ -449,13 +416,8 @@ export type DelegateVotesChangedEventFilter =
   TypedEventFilter<DelegateVotesChangedEvent>;
 
 export type RewardsClaimedEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber],
-  {
-    _from: string;
-    _receiver: string;
-    _escrowedAmount: BigNumber;
-    _nonEscrowedAmount: BigNumber;
-  }
+  [string, BigNumber],
+  { _receiver: string; _rewardAmount: BigNumber }
 >;
 
 export type RewardsClaimedEventFilter = TypedEventFilter<RewardsClaimedEvent>;
@@ -569,7 +531,6 @@ export interface BasePool extends BaseContract {
     ): Promise<[ERC20Votes.CheckpointStructOutput]>;
 
     claimRewards(
-      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -603,18 +564,10 @@ export interface BasePool extends BaseContract {
 
     delegates(account: string, overrides?: CallOverrides): Promise<[string]>;
 
-    depositToken(overrides?: CallOverrides): Promise<[string]>;
-
     distributeRewards(
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    escrowDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    escrowPool(overrides?: CallOverrides): Promise<[string]>;
-
-    escrowPortion(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getPastTotalSupply(
       blockNumber: BigNumberish,
@@ -775,7 +728,6 @@ export interface BasePool extends BaseContract {
   ): Promise<ERC20Votes.CheckpointStructOutput>;
 
   claimRewards(
-    _receiver: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -809,18 +761,10 @@ export interface BasePool extends BaseContract {
 
   delegates(account: string, overrides?: CallOverrides): Promise<string>;
 
-  depositToken(overrides?: CallOverrides): Promise<string>;
-
   distributeRewards(
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  escrowDuration(overrides?: CallOverrides): Promise<BigNumber>;
-
-  escrowPool(overrides?: CallOverrides): Promise<string>;
-
-  escrowPortion(overrides?: CallOverrides): Promise<BigNumber>;
 
   getPastTotalSupply(
     blockNumber: BigNumberish,
@@ -971,7 +915,7 @@ export interface BasePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<ERC20Votes.CheckpointStructOutput>;
 
-    claimRewards(_receiver: string, overrides?: CallOverrides): Promise<void>;
+    claimRewards(overrides?: CallOverrides): Promise<void>;
 
     cumulativeRewardsOf(
       _account: string,
@@ -1000,18 +944,10 @@ export interface BasePool extends BaseContract {
 
     delegates(account: string, overrides?: CallOverrides): Promise<string>;
 
-    depositToken(overrides?: CallOverrides): Promise<string>;
-
     distributeRewards(
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    escrowDuration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    escrowPool(overrides?: CallOverrides): Promise<string>;
-
-    escrowPortion(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPastTotalSupply(
       blockNumber: BigNumberish,
@@ -1174,17 +1110,13 @@ export interface BasePool extends BaseContract {
       newBalance?: null
     ): DelegateVotesChangedEventFilter;
 
-    "RewardsClaimed(address,address,uint256,uint256)"(
-      _from?: string | null,
+    "RewardsClaimed(address,uint256)"(
       _receiver?: string | null,
-      _escrowedAmount?: null,
-      _nonEscrowedAmount?: null
+      _rewardAmount?: null
     ): RewardsClaimedEventFilter;
     RewardsClaimed(
-      _from?: string | null,
       _receiver?: string | null,
-      _escrowedAmount?: null,
-      _nonEscrowedAmount?: null
+      _rewardAmount?: null
     ): RewardsClaimedEventFilter;
 
     "RewardsDistributed(address,uint256)"(
@@ -1293,7 +1225,6 @@ export interface BasePool extends BaseContract {
     ): Promise<BigNumber>;
 
     claimRewards(
-      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1327,18 +1258,10 @@ export interface BasePool extends BaseContract {
 
     delegates(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    depositToken(overrides?: CallOverrides): Promise<BigNumber>;
-
     distributeRewards(
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    escrowDuration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    escrowPool(overrides?: CallOverrides): Promise<BigNumber>;
-
-    escrowPortion(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPastTotalSupply(
       blockNumber: BigNumberish,
@@ -1508,7 +1431,6 @@ export interface BasePool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     claimRewards(
-      _receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1545,18 +1467,10 @@ export interface BasePool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    depositToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     distributeRewards(
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    escrowDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    escrowPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    escrowPortion(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getPastTotalSupply(
       blockNumber: BigNumberish,
