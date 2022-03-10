@@ -7,6 +7,8 @@
 3) LP tokens can't be transferable
 4) Since we're using solidity 0.8, we don't need safeMath library
 
+You can find the whole flow under test/pool.test.ts
+
 ## Contracts deployed and verified on Kovan Testnet
 
 1) ETHPool: [https://kovan.etherscan.io/address/0xa1C164264ca32f77fA7D7a6009730c3E50d6434A#code](https://kovan.etherscan.io/address/0xa1C164264ca32f77fA7D7a6009730c3E50d6434A#code)
